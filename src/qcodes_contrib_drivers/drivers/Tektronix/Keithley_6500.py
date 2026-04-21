@@ -504,7 +504,7 @@ class Keithley_6500(VisaInstrument):
         """
         func = self.digi_sense_function.get_latest() or self.digi_sense_function()
         if func == "None":
-            raise AttributeError(
+            raise RuntimeError(
                 "No digitize function selected. "
                 "Set digi_sense_function to 'voltage' or 'current' first."
             )
