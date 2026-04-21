@@ -512,7 +512,7 @@ class Keithley_6500(VisaInstrument):
         return cast("Keithley6500DigitizeSense", submodule)
 
     def abort(self) -> None:
-        """Stop any running trigger model or active acquisition (\*ABORt).
+        r"""Stop any running trigger model or active acquisition (\*ABORt).
 
         Call this before :meth:`Keithley6500Buffer.clear_buffer` or any other
         command that would conflict with an in-progress acquisition.
