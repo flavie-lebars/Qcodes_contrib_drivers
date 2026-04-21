@@ -147,7 +147,7 @@ class Keithley6500Buffer(InstrumentChannel):
             docstring="Timestamp of the last reading in the buffer.",
         )
 
-        self.time_axis: _Keithley6500TimeAxis = self.add_parameter(  # type: ignore[assignment]
+        self.time_axis: _Keithley6500TimeAxis = self.add_parameter(
             "time_axis",
             parameter_class=_Keithley6500TimeAxis,
             unit="s",
@@ -156,7 +156,7 @@ class Keithley6500Buffer(InstrumentChannel):
             snapshot_value=False,
         )
 
-        self.timetrace: _Keithley6500TimeTrace = self.add_parameter(  # type: ignore[assignment]
+        self.timetrace: _Keithley6500TimeTrace = self.add_parameter(
             "timetrace",
             parameter_class=_Keithley6500TimeTrace,
             setpoints=(self.time_axis,),
