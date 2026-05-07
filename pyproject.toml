@@ -105,8 +105,6 @@ module = [
     "TimeTagger",
     "AMC",
     "ACS",
-    "autobahn",
-    "python-dotenv",
     "serial.*",
     "scipy.*",
     "nanonis_tramea",
