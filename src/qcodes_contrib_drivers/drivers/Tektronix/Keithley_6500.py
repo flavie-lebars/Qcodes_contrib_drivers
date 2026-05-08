@@ -524,5 +524,5 @@ class Keithley_6500(VisaInstrument):
         self.write(":INITiate")
 
     def wait(self) -> None:
-        """Wait for all pending operations to complete (*WAI)."""
+        """Wait for all pending operations to complete"""
         self.write("*WAI")
