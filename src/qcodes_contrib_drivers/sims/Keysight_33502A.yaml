@@ -1,0 +1,23 @@
+spec: "1.1"
+devices:
+
+  Keysight_33502A:
+    eom:
+      GPIB INSTR:
+        q: "\n"
+        r: "\n"
+
+    dialogues:
+      - q: "*IDN?"
+        r: "QCoDeS, Keysight_33502A (Simulated), 1337, 0.0.01"
+
+    properties:
+      coupling:
+        default: "DC"
+        getter:
+          q: ""
+          r: ""
+        setter:
+          q: ""
+          r: ""
+        specs:
