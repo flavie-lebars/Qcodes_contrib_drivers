@@ -1,3 +1,4 @@
+"""QCoDeS driver for the Keysight 33502A isolated amplifier."""
 from qcodes import validators as vals
 from qcodes.instrument import Instrument, VisaInstrument
 from qcodes.instrument.channel import InstrumentChannel
@@ -5,18 +6,16 @@ from qcodes.parameters import Parameter
 
 
 class Keysight33502AOutputChannel(InstrumentChannel):
-    """
-    QCoDeS driver for the Keysight 33502A isolated amplifier.
-    """
+    """QCoDeS driver for the Keysight 33502A isolated amplifier."""
 
     def __init__(self, parent: Instrument, name: str, channum: int, **kwargs) -> None:
         """Class constructor.
 
         Args:
             parent: The instrument to which the channel is attached.
-            name: The name of the channel
-            channum: The number of the channel in question (1-2)
-            **kwargs: kwargs are forwarded to base class.
+            name: The name of the channel.
+            channum: The number of the channel in question (1-2).
+            **kwargs: Kwargs are forwarded to base class.
 
         """
         super().__init__(parent, name, **kwargs)
@@ -68,20 +67,14 @@ class Keysight33502A(VisaInstrument):
 
     default_terminator = '\n'
 
-    def __init__(
-        self,
-        name: str,
-        address: str,
-        silent: bool = False,
-        **kwargs,
-    ):
+    def __init__(self, name: str, address: str, silent: bool = False, **kwargs):
         """Class constructor.
 
         Args:
             name: The name of the instrument used internally by QCoDeS. Must be unique.
             address: The VISA resource name.
             silent: If True, no connect message is printed.
-            **kwargs: kwargs are forwarded to base class.
+            **kwargs: Kwargs are forwarded to base class.
 
         """
         super().__init__(name, address, **kwargs)
