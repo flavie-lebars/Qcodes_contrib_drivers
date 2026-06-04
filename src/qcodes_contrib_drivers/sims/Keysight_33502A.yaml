@@ -1,23 +1,43 @@
+# SIMULATED INSTRUMENT FOR Keysight 33502A amplifier
 spec: "1.1"
 devices:
-
   Keysight_33502A:
     eom:
       GPIB INSTR:
         q: "\n"
         r: "\n"
-
+    error: ERROR
     dialogues:
       - q: "*IDN?"
-        r: "QCoDeS, Keysight_33502A (Simulated), 1337, 0.0.01"
+        r: "QCoDeS, 33502A, 1, 0.1"
+
 
     properties:
-      coupling:
+
+      coupling ch1:
         default: "DC"
         getter:
-          q: ""
-          r: ""
+          q: "INPut1:COUPling?"
+          r: "{}"
         setter:
-          q: ""
-          r: ""
+          q: "INPut1:COUPling {}"
         specs:
+          valid: ["DC", "AC"]
+
+      impedance ch1:
+        default: 50
+        getter:
+          q: "INPut1:IMPedance?'"
+          r: "{}"
+        setter:
+          q: "INPut1:IMPedance {}"
+
+      path ch1:
+        default:
+        getter:
+          q: "ROUTe1:PATH?"
+          r: "{}"
+        setter:
+          q: "ROUTe1:PATH {}"
+        specs:
+          valid: [ "DIR", "AMPL" ]
