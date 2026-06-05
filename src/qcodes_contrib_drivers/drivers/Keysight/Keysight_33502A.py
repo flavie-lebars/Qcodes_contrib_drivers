@@ -34,9 +34,9 @@ class Keysight33502AOutputChannel(InstrumentChannel):
             label=f'Channel {channum} impedance',
             set_cmd=f'INPut{channum}:IMPedance {{}}',
             get_cmd=f'INPut{channum}:IMPedance?',
-            get_parser=int,
+            get_parser=float,
             unit='ohm',
-            vals=vals.MultiType(vals.Ints(50, int(1e6)), vals.Enum('MIN', 'MAX', 'DEF')),
+            vals=vals.MultiType(vals.Numbers(50, 1e6), vals.Enum('MIN', 'MAX', 'DEF')),
         )
 
         self.path: Parameter = self.add_parameter(
