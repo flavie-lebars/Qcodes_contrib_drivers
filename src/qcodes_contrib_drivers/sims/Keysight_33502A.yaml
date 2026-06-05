@@ -10,7 +10,7 @@ devices:
 
     dialogues:
       - q: "*IDN?"
-        r: "QCoDeS, 33502A, 1, 0.1"
+        r: "Agilent Technologies, 33502A, 1, 0.1"
 
     properties:
       coupling_ch1:

@@ -20,7 +20,7 @@ def _make_driver():
 def test_init(driver: Keysight33502A):
     idn_dict = driver.IDN()
 
-    assert idn_dict['vendor'] == 'QCoDeS'
+    assert idn_dict['vendor'] == 'Agilent Technologies'
     assert idn_dict['model'] == '33502A'
 
 
