@@ -8,7 +8,7 @@ from qcodes.parameters import Parameter
 class Keysight33502AOutputChannel(InstrumentChannel):
     """QCoDeS driver for the Keysight 33502A isolated amplifier."""
 
-    def __init__(self, parent: Instrument, name: str, channum: int, **kwargs) -> None:
+    def __init__(self, parent: Instrument, name: str, channum: int, **kwargs):
         """Class constructor.
 
         Args:
