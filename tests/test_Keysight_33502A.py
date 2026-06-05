@@ -7,11 +7,11 @@ from qcodes_contrib_drivers.drivers.Keysight.Keysight_33502A import Keysight3350
 
 @pytest.fixture(scope='function', name='driver')
 def _make_driver():
-    """Create a simulated Keithley 2182A instrument for testing."""
+    """Create a simulated Keysight 33502A instrument for testing."""
     driver = Keysight33502A(
-        "Keysight33502A",
-        address="GPIB::1::INSTR",
-        pyvisa_sim_file="qcodes_contrib_drivers.sims:Keysight_33502A.yaml",
+        'Keysight33502A',
+        address='GPIB::1::INSTR',
+        pyvisa_sim_file='qcodes_contrib_drivers.sims:Keysight_33502A.yaml',
     )
     yield driver
     driver.close()
