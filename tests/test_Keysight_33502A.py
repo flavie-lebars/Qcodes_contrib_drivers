@@ -9,7 +9,7 @@ from qcodes_contrib_drivers.drivers.Keysight.Keysight_33502A import Keysight3350
 def _make_driver():
     """Create a simulated Keysight 33502A instrument for testing."""
     driver = Keysight33502A(
-        'Keysight33502A',
+        'Keysight_33502A',
         address='GPIB::1::INSTR',
         pyvisa_sim_file='qcodes_contrib_drivers.sims:Keysight_33502A.yaml',
     )
@@ -21,12 +21,11 @@ def test_init(driver: Keysight33502A):
     idn_dict = driver.IDN()
 
     assert idn_dict['vendor'] == 'QCoDeS'
-
-    assert driver.model == '33502A'
-    assert driver.num_channels == 2
+    assert idn_dict['model'] == '33502A'
 
 
 def test_channel(driver: Keysight33502A):
+    assert driver.num_channels == 2
     assert_type(driver.ch1, Keysight33502AOutputChannel)
     assert_type(driver.ch2, Keysight33502AOutputChannel)
 
@@ -53,7 +52,7 @@ def test_path(driver: Keysight33502A):
 
 
 def test_state(driver: Keysight33502A):
-    assert driver.ch1.state() == 0
-    driver.ch1.state(1)
-    assert driver.ch1.state() == 1
-    driver.ch1.state(0)
+    assert driver.ch1.state() == 'OFF'
+    driver.ch1.state('ON')
+    assert driver.ch1.state() == 'ON'
+    driver.ch1.state('OFF')
