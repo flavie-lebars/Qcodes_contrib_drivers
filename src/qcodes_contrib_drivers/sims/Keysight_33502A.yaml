@@ -6,38 +6,56 @@ devices:
       GPIB INSTR:
         q: "\n"
         r: "\n"
+
     error: ERROR
+
     dialogues:
       - q: "*IDN?"
         r: "QCoDeS, 33502A, 1, 0.1"
 
-
     properties:
-
-      coupling ch1:
+      coupling_ch1:
         default: "DC"
         getter:
           q: "INPut1:COUPling?"
-          r: "{}"
+          r: "{:.2f}"
         setter:
           q: "INPut1:COUPling {}"
         specs:
           valid: ["DC", "AC"]
 
-      impedance ch1:
-        default: 50
+      impedance_ch1:
+        default: 1000000
         getter:
-          q: "INPut1:IMPedance?'"
-          r: "{}"
+          q: "INPut1:IMPedance?"
+          r: "{:.2f}"
         setter:
           q: "INPut1:IMPedance {}"
+        specs:
+          min: 50
+          max: 1000000
+          type: int
 
-      path ch1:
-        default:
+      path_ch1:
+        default: "DIR"
         getter:
           q: "ROUTe1:PATH?"
-          r: "{}"
+          r: "{:.2f}"
         setter:
           q: "ROUTe1:PATH {}"
         specs:
-          valid: [ "DIR", "AMPL" ]
+          valid: ["DIR", "AMPL"]
+
+      state_ch1:
+        default: 0
+        getter:
+          q: "OUTPut1:STATe?"
+          r: "{:.2f}"
+        setter:
+          q: "OUTPut1:STATe {}"
+        specs:
+          valid: [0, 1]
+
+resources:
+  GPIB::1::INSTR:
+    device: Keysight_33502A
