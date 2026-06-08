@@ -26,6 +26,8 @@ def test_init(driver: Keysight33502A):
 
 def test_channel(driver: Keysight33502A):
     assert driver.num_channels == 2
+    assert isinstance(driver.ch1, Keysight33502AOutputChannel)
+    assert isinstance(driver.ch2, Keysight33502AOutputChannel)
     assert_type(driver.ch1, Keysight33502AOutputChannel)
     assert_type(driver.ch2, Keysight33502AOutputChannel)
 
