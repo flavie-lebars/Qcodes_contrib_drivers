@@ -22,7 +22,7 @@ class Keysight33502AOutputChannel(InstrumentChannel):
 
         self.coupling: Parameter = self.add_parameter(
             'coupling',
-            label=f'Channel {channum} couping mode',
+            label=f'Channel {channum} coupling mode',
             set_cmd=f'INPut{channum}:COUPling {{}}',
             get_cmd=f'INPut{channum}:COUPling?',
             get_parser=str.rstrip,
