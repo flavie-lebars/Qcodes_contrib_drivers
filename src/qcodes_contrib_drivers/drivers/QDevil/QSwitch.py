@@ -1,15 +1,15 @@
 import re
 import itertools
 from time import sleep as sleep_s
-from qcodes.instrument.parameter import DelegateParameter
-from qcodes.instrument.visa import Instrument
-from qcodes.utils import validators
 from pyvisa.errors import VisaIOError
 from typing import (
-    Tuple, Sequence, List, Dict, Set, Union, Optional)
+    Tuple, Sequence, List, Dict, Set, Union, Optional, Unpack)
 from packaging.version import parse
 import socket
 import pyvisa as visa
+from pyvisa.resources import SerialInstrument
+from qcodes import Instrument, DelegateParameter, validators
+from qcodes.instrument import InstrumentBaseKWArgs
 
 # Version 1.1.0
 
@@ -77,7 +77,8 @@ def state_to_compressed_list(state: State) -> str:
                 start_line = line
                 end_line = line
                 continue
-            if line == end_line + 1:
+
+            if end_line is not None and line == end_line + 1:
                 end_line = line
                 continue
             if start_line == end_line:
@@ -113,23 +114,22 @@ def _state_diff(before: State, after: State) -> Tuple[State, State, State]:
 
 class QSwitch(Instrument):
 
-    def __init__(self, name: str, address: str, **kwargs: "Unpack[InstrumentBaseKWArgs]") -> None:
+    def __init__(self, name: str, address: str, visalib: str = '@py', **kwargs: "Unpack[InstrumentBaseKWArgs]") -> None:
         """Connect to a QSwitch
 
         Args:
             name (str): Name for instrument
             address (str): Address identification string, either a visa identification address (for USB or TCP/IP (fw<=1.3)) or IP address (for UDP (fw>=2.0))
         """
-        visalib = kwargs.pop('visalib', '@py')
         super().__init__(name, **kwargs)
         self._check_instrument_name(name)
         if 'ASRL' in address:
             self._udp_mode = False
-            self._switch = visa.ResourceManager(visalib).open_resource(address)
+            self._switch: SerialInstrument = visa.ResourceManager(visalib).open_resource(address)  # type: ignore
             self._set_up_visa()
         elif 'TCPIP' in address: #(TCP/IP connection for fw 1.3 and below)
             self._udp_mode = False
-            self._switch = visa.ResourceManager(visalib).open_resource(address)
+            self._switch: SerialInstrument = visa.ResourceManager(visalib).open_resource(address)  # type: ignore
             self._set_up_visa()
         elif address.count(":") == 0: #(UDP connection for fw 2.0 and above)
             self._udp_mode = True
