@@ -34,6 +34,8 @@ def channel_list_to_state(channel_list: str) -> State:
         return result
     elif not outer:
         raise ValueError(f'Expected channel list, got {channel_list}')
+    if outer[1] == '':
+        return result
     sequences = outer[1].split(',')
     for sequence in sequences:
         limits = sequence.split(':')
@@ -123,23 +125,17 @@ class QSwitch(Instrument):
         """
         super().__init__(name, **kwargs)
         self._check_instrument_name(name)
-        if 'ASRL' in address:
-            self._udp_mode = False
-            self._switch: SerialInstrument = visa.ResourceManager(visalib).open_resource(address)  # type: ignore
-            self._set_up_visa()
-        elif 'TCPIP' in address: #(TCP/IP connection for fw 1.3 and below)
-            self._udp_mode = False
-            self._switch: SerialInstrument = visa.ResourceManager(visalib).open_resource(address)  # type: ignore
-            self._set_up_visa()
-        elif address.count(":") == 0: #(UDP connection for fw 2.0 and above)
+        if address.count(":") == 0:  # UDP connection for fw 2.0 and above
             self._udp_mode = True
             self._max_udp_writes = 5
             self._max_udp_queries = 5
             self._udp_ip = address
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self._sock.settimeout(2)  # time_out in seconds
-        else:
-            raise ValueError(f'Unknown connection type for address: {address}')
+        else:  # VISA (GPIB, ASRL, TCPIP, USB, ...)
+            self._udp_mode = False
+            self._switch: SerialInstrument = visa.ResourceManager(visalib).open_resource(address)  # type: ignore
+            self._set_up_visa()
 
         self._set_up_debug_settings()
         self._set_up_simple_functions()
@@ -312,16 +308,16 @@ class QSwitch(Instrument):
             Sequence[str]: Messages lingering in queue
         """
         lingering = list()
-        original_timeout = self.visa_handle.timeout
-        self.visa_handle.timeout = self._message_flush_timeout_ms
+        original_timeout = self._switch.timeout
+        self._switch.timeout = self._message_flush_timeout_ms
         while True:
             try:
-                message = self.visa_handle.read()
+                message = self._switch.read()
             except VisaIOError:
                 break
             else:
                 lingering.append(message)
-        self.visa_handle.timeout = original_timeout
+        self._switch.timeout = original_timeout
         return lingering
 
     # -----------------------------------------------------------------------
