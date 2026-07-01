@@ -7,10 +7,9 @@ from typing import (
 from packaging.version import parse
 import socket
 import pyvisa as visa
-from qcodes import Instrument, validators
 from qcodes.parameters import DelegateParameter
-from qcodes.instrument import InstrumentBaseKWArgs
-
+from qcodes.instrument import Instrument, InstrumentBaseKWArgs
+from qcodes.validators import Enum
 # Version 1.1.0
 
 State = Sequence[Tuple[int, int]]
@@ -163,7 +162,7 @@ class QSwitch(Instrument):
             set_cmd='aut {0}'.format('{}'),
             get_cmd='aut?',
             get_parser=str,
-            vals=validators.Enum('on', 'off'),
+            vals=Enum('on', 'off'),
             snapshot_value=False,
         )
         self.add_parameter(
@@ -171,7 +170,7 @@ class QSwitch(Instrument):
             set_cmd='beep:stat {0}'.format('{}'),
             get_cmd='beep:stat?',
             get_parser=str,
-            vals=validators.Enum('on', 'off'),
+            vals=Enum('on', 'off'),
             snapshot_value=False,
         )
         self._add_monitor_pseudo_parameters()
