@@ -7,8 +7,8 @@ from typing import (
 from packaging.version import parse
 import socket
 import pyvisa as visa
-from pyvisa.resources import SerialInstrument
-from qcodes import Instrument, DelegateParameter, validators
+from qcodes import Instrument, validators
+from qcodes.parameters import DelegateParameter
 from qcodes.instrument import InstrumentBaseKWArgs
 
 # Version 1.1.0
