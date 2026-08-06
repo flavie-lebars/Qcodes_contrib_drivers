@@ -13,7 +13,7 @@ An alternative approach is to make `DECS` *'look like'* a standard `VISA` instru
 
 ## To connect to your system control software ('DECS') using QCoDeS
 
-1.  Setup the `decsvisa` simple TCP socket server. Follow the setup and configuration steps detailed in the `README.md` file included within the decsvisa directory. This decsvisa directory can be found at `qcodes/instrument_drivers/Oxford_Instruments/decsvisa`.
+1.  Setup the `decsvisa` simple TCP socket server. Follow the setup and configuration steps detailed in the `README.md` file included within the decsvisa directory. This decsvisa directory can be found at `qcodes/instrument_drivers/QuantumDesign/decsvisa`.
 
 2. In the `QCoDeS` driver file `Proteox.py`, configure the system settings to be correct for your system.
 

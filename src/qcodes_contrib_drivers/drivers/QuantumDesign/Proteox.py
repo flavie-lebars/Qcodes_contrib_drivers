@@ -136,18 +136,19 @@ class DECS(VisaInstrument):
         name (str): instrument name e.g. 'Proteox'
         decs_visa_path (str): supply the file path from your working directory to the decs_visa.py file
         """
-
+        
         running_on = platform.platform()
         if running_on.startswith("Windows"):
-            print(f"Running on {running_on} - start subprocess without PIPEd output")
-            subprocess.Popen(["python", decs_visa_path])
+            print(f"Running on {running_on} - start subprocess without PIPEd output") 
+            subprocess.Popen(["python", decs_visa_path]) # comment out to use simulated instrument in /qcodes/instrument/sims/ directory
         else:
             print(f"Running on {running_on} - start subprocess with PIPEd output")
-            subprocess.Popen(["python3", decs_visa_path], stdout=subprocess.PIPE)
-
+            subprocess.Popen(["python3", decs_visa_path], stdout=subprocess.PIPE) # comment out to use simulated instrument in /qcodes/instrument/sims/ directory
+        
         time.sleep(1)
 
-        super().__init__(name, f'TCPIP::{HOST}::{PORT}::SOCKET', terminator=WRITE_DELIM, **kwargs)
+        #super().__init__(name, 'TCPIP0::127.0.0.1::33578::SOCKET', terminator="\n", **kwargs) # for using simulated instrument in /qcodes/instrument/sims/ directory
+        super().__init__(name, f'TCPIP::{HOST}::{PORT}::SOCKET', terminator=WRITE_DELIM, **kwargs) # for real DECS system with DECSVISA, comment out to use simulated instrument in /qcodes/instrument/sims/ directory
 
         self.add_parameter(
             "PT1_Head_Temperature",
@@ -349,6 +350,7 @@ class DECS(VisaInstrument):
                 name = "Magnet_Current_Vector",
                 parameter_class=MagnetCurrentParameters,
             )
+
             # qcodes can't use multiparameters as setpoint, this dummy bypasses it.
             self.add_parameter(
                 name='Bx',
@@ -375,15 +377,13 @@ class DECS(VisaInstrument):
                 get_parser=None
             )
 
-
-
             if MAGNET_HAS_SWITCH:
                 self.add_parameter(
                     "Switch_State",
                     label=name,
                     get_cmd="get_SWZ_STATE",
-                    get_parser=float,
-                    val_mapping={'OPEN': 1.0, 'CLOSED': 0.0}
+                    get_parser=str,
+                    val_mapping={'OPEN': '1.0', 'CLOSED': '0.0'}
                 )
 
         self.connect_message()
@@ -424,7 +424,7 @@ class DECS(VisaInstrument):
                 self._param_setter('set_MAG_TARGET', param)
             case _:
                 print('Incorrect inputs.')
-                print('[x,y,z,mode,rate,persist_on_completion]')
+                print('[coord,x,y,z,mode,rate,persist_on_completion]')
 
 
     def set_output_current_target(self, x, y, z, sweep_mode, sweep_rate, persist_on_completion):
@@ -526,10 +526,10 @@ class DECS(VisaInstrument):
 
     def wait_until_field_stable_timeout(self,timeout=600):
         """VRM utility function.
-        Takes timeout in seconds, switches magnet to hold in timeout*1.1 +10s.
-        Default is 10min"""
+        Takes timeout in seconds, switches magnet to hold in timeout*1.1 + 10 s.
+        Default for timeout is 10min"""
         start=time.time()
-        tout=timeout*1.1+10
+        tout=timeout*1.1 + 10
         status=self.Magnet_State()
         while status != 'Holding Not Persistent':
             status=self.Magnet_State()
@@ -624,5 +624,5 @@ class DECS(VisaInstrument):
 
     def close(self) -> None:
         # Kill off the WAMP and socket connections
-        self.write(SHUTDOWN)
+        self.write(SHUTDOWN) # comment out to use simulated instrument in /qcodes/instrument/sims/ directory
         return super().close()
