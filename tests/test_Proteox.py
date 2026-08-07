@@ -4,9 +4,7 @@ import subprocess
 import types
 import platform
 
-# append path to _decsvisa directory
-sys.path.append('../src/qcodes_contrib_drivers/drivers/QuantumDesign/')
-from _decsvisa.src.decs_visa_tools import decs_visa_settings
+from qcodes_contrib_drivers.drivers.QuantumDesign._decsvisa.src.decs_visa_tools import decs_visa_settings
 
 # The following decorator makes the driver
 # available to all the functions in this module
@@ -20,7 +18,7 @@ def proteox_driver_init_on_windows(monkeypatch):
     )
 
     # import driver after monkeypatching so it picks up the patched settings
-    import Proteox
+    from qcodes_contrib_drivers.drivers.QuantumDesign import Proteox
 
     # Force the constructor onto the Windows subprocess branch
     #monkeypatch.setattr(Proteox, "running_on", lambda: "Windows-10")
@@ -60,7 +58,7 @@ def proteox_driver_init_not_on_windows(monkeypatch):
 
     monkeypatch.setattr(platform, "platform", "Linux-5.15") # doesn't work
 
-    import Proteox
+    from qcodes_contrib_drivers.drivers.QuantumDesign import Proteox
 
     # Make all parameters available for testing
     monkeypatch.setattr(Proteox, "SYSTEM_HAS_MAGNET", True)
