@@ -13,8 +13,12 @@ from qcodes_contrib_drivers.drivers.QuantumDesign._decsvisa.src.decs_visa_tools 
 def proteox_driver_init_on_windows(monkeypatch):
 
     class FakePopen:
-        def __init__(self):
+        def __init__(self, *args, **kwargs):
             self.returncode = 0
+            self.stdout = None
+            self.stderr = None
+            self.stdin = None
+            self.pid = 12345
 
         def __enter__(self):
             return self
@@ -22,11 +26,20 @@ def proteox_driver_init_on_windows(monkeypatch):
         def __exit__(self, exc_type, exc_value, traceback):
             return False
 
-        def wait(self):
-            return 0
+        def wait(self, timeout=None):
+            return self.returncode
 
         def kill(self):
             self.returncode = -9
+
+        def terminate(self):
+            self.returncode = -15
+
+        def poll(self):
+            return self.returncode
+
+        def communicate(self, input=None, timeout=None):
+            return (b"", b"")
 
     # Prevent starting the real decs_visa subprocess
     monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
@@ -66,8 +79,12 @@ def proteox_driver_init_not_on_windows(monkeypatch):
     monkeypatch.setattr(decs_visa_settings, "WRITE_DELIM", "\n", raising=False)
     
     class FakePopen:
-        def __init__(self):
+        def __init__(self, *args, **kwargs):
             self.returncode = 0
+            self.stdout = None
+            self.stderr = None
+            self.stdin = None
+            self.pid = 12345
 
         def __enter__(self):
             return self
@@ -75,11 +92,20 @@ def proteox_driver_init_not_on_windows(monkeypatch):
         def __exit__(self, exc_type, exc_value, traceback):
             return False
 
-        def wait(self):
-            return 0
+        def wait(self, timeout=None):
+            return self.returncode
 
         def kill(self):
             self.returncode = -9
+
+        def terminate(self):
+            self.returncode = -15
+
+        def poll(self):
+            return self.returncode
+
+        def communicate(self, input=None, timeout=None):
+            return (b"", b"")
     
     # Prevent starting the real decs_visa subprocess
     monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
