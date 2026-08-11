@@ -3,6 +3,7 @@ import sys
 import subprocess
 import types
 import platform
+from unittest.mock import MagicMock
 
 from qcodes_contrib_drivers.drivers.QuantumDesign._decsvisa.src.decs_visa_tools import decs_visa_settings
 
@@ -12,37 +13,18 @@ from qcodes_contrib_drivers.drivers.QuantumDesign._decsvisa.src.decs_visa_tools 
 
 def proteox_driver_init_on_windows(monkeypatch):
 
-    class FakePopen:
-        def __init__(self, *args, **kwargs):
-            self.returncode = 0
-            self.stdout = None
-            self.stderr = None
-            self.stdin = None
-            self.pid = 12345
+    mock_process = MagicMock()
+    mock_process.args = []
+    mock_process.returncode = 0
+    mock_process.wait.return_value = 0
+    mock_process.communicate.return_value = (b"", b"")
+    mock_process.__enter__.return_value = mock_process
 
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc_value, traceback):
-            return False
-
-        def wait(self, timeout=None):
-            return self.returncode
-
-        def kill(self):
-            self.returncode = -9
-
-        def terminate(self):
-            self.returncode = -15
-
-        def poll(self):
-            return self.returncode
-
-        def communicate(self, input=None, timeout=None):
-            return (b"", b"")
-
-    # Prevent starting the real decs_visa subprocess
-    monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
+    monkeypatch.setattr(
+        subprocess,
+        "Popen",
+        MagicMock(return_value=mock_process),
+    )
 
     # import driver after monkeypatching so it picks up the patched settings
     from qcodes_contrib_drivers.drivers.QuantumDesign import Proteox
@@ -78,37 +60,18 @@ def proteox_driver_init_not_on_windows(monkeypatch):
     monkeypatch.setattr(decs_visa_settings, "PORT", "33576", raising=False)
     monkeypatch.setattr(decs_visa_settings, "WRITE_DELIM", "\n", raising=False)
     
-    class FakePopen:
-        def __init__(self, *args, **kwargs):
-            self.returncode = 0
-            self.stdout = None
-            self.stderr = None
-            self.stdin = None
-            self.pid = 12345
+    mock_process = MagicMock()
+    mock_process.args = []
+    mock_process.returncode = 0
+    mock_process.wait.return_value = 0
+    mock_process.communicate.return_value = (b"", b"")
+    mock_process.__enter__.return_value = mock_process
 
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc_value, traceback):
-            return False
-
-        def wait(self, timeout=None):
-            return self.returncode
-
-        def kill(self):
-            self.returncode = -9
-
-        def terminate(self):
-            self.returncode = -15
-
-        def poll(self):
-            return self.returncode
-
-        def communicate(self, input=None, timeout=None):
-            return (b"", b"")
-    
-    # Prevent starting the real decs_visa subprocess
-    monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
+    monkeypatch.setattr(
+        subprocess,
+        "Popen",
+        MagicMock(return_value=mock_process),
+    )
 
     monkeypatch.setattr(platform, "platform",  lambda: "Linux-5.15")
 
