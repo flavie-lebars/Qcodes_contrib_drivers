@@ -47,7 +47,7 @@ def proteox_driver_init_on_windows(monkeypatch):
     proteox_sim = Proteox.DECS(
         "proteox_sim",
         decs_visa_path="dummy_decs_visa.py",  # never actually used
-        pyvisa_sim_file="Proteox.yaml",
+        pyvisa_sim_file="qcodes_contrib_drivers.sims:Proteox.yaml",
     )
     yield proteox_sim
 
@@ -88,7 +88,7 @@ def proteox_driver_init_not_on_windows(monkeypatch):
     proteox_sim = Proteox.DECS(
         "proteox_sim",
         decs_visa_path="dummy_decs_visa.py",  # never actually used
-        pyvisa_sim_file="Proteox.yaml",
+        pyvisa_sim_file="qcodes_contrib_drivers.sims:Proteox.yaml",
     )
     yield proteox_sim
 
