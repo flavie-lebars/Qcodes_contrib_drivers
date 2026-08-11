@@ -12,10 +12,18 @@ from qcodes_contrib_drivers.drivers.QuantumDesign._decsvisa.src.decs_visa_tools 
 
 def proteox_driver_init_on_windows(monkeypatch):
 
+    class FakePopen:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            return False
+
+        def wait(self):
+            return 0
+
     # Prevent starting the real decs_visa subprocess
-    monkeypatch.setattr(
-        subprocess, "Popen", lambda *a, **k: types.SimpleNamespace(), raising=False
-    )
+    monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
 
     # import driver after monkeypatching so it picks up the patched settings
     from qcodes_contrib_drivers.drivers.QuantumDesign import Proteox
@@ -51,12 +59,20 @@ def proteox_driver_init_not_on_windows(monkeypatch):
     monkeypatch.setattr(decs_visa_settings, "PORT", "33576", raising=False)
     monkeypatch.setattr(decs_visa_settings, "WRITE_DELIM", "\n", raising=False)
     
+    class FakePopen:
+            def __enter__(self):
+                return self
+    
+            def __exit__(self, exc_type, exc_value, traceback):
+                return False
+    
+            def wait(self):
+                return 0
+    
     # Prevent starting the real decs_visa subprocess
-    monkeypatch.setattr(
-        subprocess, "Popen", lambda *a, **k: types.SimpleNamespace(), raising=False
-    )
+    monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
 
-    monkeypatch.setattr(platform, "platform", "Linux-5.15") # doesn't work
+    monkeypatch.setattr(platform, "platform",  lambda: "Linux-5.15")
 
     from qcodes_contrib_drivers.drivers.QuantumDesign import Proteox
 
@@ -485,16 +501,6 @@ def test_wait_until_field_stable(monkeypatch, proteox_sim) -> None:
 
 def test_wait_until_field_stable_timeout(monkeypatch, proteox_sim, capsys) -> None:
     """Test that the timeout path runs when the magnet stays in a ramping state."""
-
-    import Proteox
-
-    current_time = [0.0]
-
-    def fake_time() -> float:
-        return current_time[0]
-
-    def fake_sleep(_seconds: float) -> None:
-        current_time[0] += 1.0
 
     state_calls = 0
 
