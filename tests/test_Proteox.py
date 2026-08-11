@@ -13,6 +13,9 @@ from qcodes_contrib_drivers.drivers.QuantumDesign._decsvisa.src.decs_visa_tools 
 def proteox_driver_init_on_windows(monkeypatch):
 
     class FakePopen:
+        def __init__(self):
+            self.returncode = 0
+
         def __enter__(self):
             return self
 
@@ -21,6 +24,9 @@ def proteox_driver_init_on_windows(monkeypatch):
 
         def wait(self):
             return 0
+
+        def kill(self):
+            self.returncode = -9
 
     # Prevent starting the real decs_visa subprocess
     monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
@@ -60,14 +66,20 @@ def proteox_driver_init_not_on_windows(monkeypatch):
     monkeypatch.setattr(decs_visa_settings, "WRITE_DELIM", "\n", raising=False)
     
     class FakePopen:
-            def __enter__(self):
-                return self
-    
-            def __exit__(self, exc_type, exc_value, traceback):
-                return False
-    
-            def wait(self):
-                return 0
+        def __init__(self):
+            self.returncode = 0
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            return False
+
+        def wait(self):
+            return 0
+
+        def kill(self):
+            self.returncode = -9
     
     # Prevent starting the real decs_visa subprocess
     monkeypatch.setattr(subprocess,"Popen",lambda *a, **k: FakePopen(), raising=False)
