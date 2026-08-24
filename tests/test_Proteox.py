@@ -59,7 +59,7 @@ def proteox_driver_init_not_on_windows(monkeypatch):
     monkeypatch.setattr(decs_visa_settings, "HOST", "127.0.0.1", raising=False)
     monkeypatch.setattr(decs_visa_settings, "PORT", "33576", raising=False)
     monkeypatch.setattr(decs_visa_settings, "WRITE_DELIM", "\n", raising=False)
-    
+
     mock_process = MagicMock()
     mock_process.args = []
     mock_process.returncode = 0
@@ -277,26 +277,26 @@ def test_He3_Flow(proteox_sim) -> None:
 
 def test_mixing_chamber_heater_off(proteox_sim) -> None:
     """Test that the mixing chamber heater can be turned off."""
-    
+
     proteox_sim.mixing_chamber_heater_off()
 
 def test_still_heater_off(proteox_sim) -> None:
     """Test that the still heater can be turned off."""
-    
+
     proteox_sim.still_heater_off()
 
 def test_set_magnet_target_rate(proteox_sim, capsys) -> None:
     """Test that the magnet target can be set."""
-    
+
     proteox_sim.set_magnet_target(0,0,0,0,'RATE',0.3,False)
     proteox_sim.set_magnet_target(0,0,0,0,'RATE',0.3,True)
-    
+
     proteox_sim.set_magnet_target(0,0,0,0,'TIME',0.3,False)
     proteox_sim.set_magnet_target(0,0,0,0,'TIME',0.3,True)
-    
+
     proteox_sim.set_magnet_target(0,0,0,0,'ASAP',0.3,False)
     proteox_sim.set_magnet_target(0,0,0,0,'ASAP',0.3,True)
-    
+
     proteox_sim.set_magnet_target(0,0,0,0,'INCORRECT',0.3,False)
     captured = capsys.readouterr()
     assert "Incorrect inputs." in captured.out
@@ -304,16 +304,16 @@ def test_set_magnet_target_rate(proteox_sim, capsys) -> None:
 
 def test_set_output_current_target(proteox_sim, capsys) -> None:
     """Test that the output current target can be set."""
-    
+
     proteox_sim.set_output_current_target(0,0,0,'RATE',0.3,False)
     proteox_sim.set_output_current_target(0,0,0,'RATE',0.3,True)
-    
+
     proteox_sim.set_output_current_target(0,0,0,'TIME',0.3,False)
     proteox_sim.set_output_current_target(0,0,0,'TIME',0.3,True)
-    
+
     proteox_sim.set_output_current_target(0,0,0,'ASAP',0.3,False)
     proteox_sim.set_output_current_target(0,0,0,'ASAP',0.3,True)
-    
+
     proteox_sim.set_output_current_target(0,0,0,'INCORRECT',0.3,False)
     captured = capsys.readouterr()
     assert "Incorrect inputs." in captured.out
@@ -365,7 +365,7 @@ def test_sweep_field(proteox_sim, monkeypatch) -> None:
     """Test that sweep_field can be called."""
 
     calls = []
-    
+
     def fake_param_setter(set_cmd, value):
         calls.append((set_cmd, value))
 
@@ -378,7 +378,7 @@ def test_sweep_psu_output(proteox_sim, monkeypatch) -> None:
     """Test that sweep_psu_output can be called."""
 
     calls = []
-    
+
     def fake_param_setter(set_cmd, value):
         calls.append((set_cmd, value))
 
@@ -391,7 +391,7 @@ def test_enter_persistent_mode(proteox_sim, monkeypatch) -> None:
     """Test that enter_persistent_mode can be called."""
 
     calls = []
-    
+
     def fake_param_setter(set_cmd, value):
         calls.append((set_cmd, value))
 
@@ -404,7 +404,7 @@ def test_leave_persistent_mode(proteox_sim, monkeypatch) -> None:
     """Test that leave_persistent_mode can be called."""
 
     calls = []
-    
+
     def fake_param_setter(set_cmd, value):
         calls.append((set_cmd, value))
 
@@ -417,7 +417,7 @@ def test_hold_field(proteox_sim, monkeypatch) -> None:
     """Test that hold_field can be called."""
 
     calls = []
-    
+
     def fake_param_setter(set_cmd, value):
         calls.append((set_cmd, value))
 
@@ -430,7 +430,7 @@ def test_open_switch(proteox_sim, monkeypatch) -> None:
     """Test that open_switch can be called."""
 
     calls = []
-    
+
     def fake_param_setter(set_cmd, value):
         calls.append((set_cmd, value))
 
@@ -443,7 +443,7 @@ def test_close_switch(proteox_sim, monkeypatch) -> None:
     """Test that close_switch can be called."""
 
     calls = []
-    
+
     def fake_param_setter(set_cmd, value):
         calls.append((set_cmd, value))
 
@@ -466,7 +466,7 @@ def test_sweep_small_field_step(proteox_sim, monkeypatch) -> None:
             if state_calls >= 5:
                 return "Holding Not Persistent"
             return "Ramping Magnetic Field"
-    
+
     monkeypatch.setattr(proteox_sim, "Magnet_State", fake_magnet_state)
     monkeypatch.setattr(proteox_sim, "_param_setter", fake_param_setter)
 
@@ -572,5 +572,5 @@ def test_wait_until_temperature_stable_std_control(proteox_sim, capsys) -> None:
 
 def test_publish(proteox_sim) -> None:
     """Test publish command"""
-    
+
     proteox_sim.publish('Test', 'Measurement')

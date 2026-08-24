@@ -17,7 +17,7 @@ devices:
         r: "0.00, 0.00, 12.00"
 
     properties:
-        
+
       SAMPLE_T:
         default: 0.005
         getter:
@@ -51,7 +51,7 @@ devices:
           min: 0.003
           max: 30
           type: float
-          
+
       MC_H:
         default: 0
         getter:
@@ -90,7 +90,7 @@ devices:
         getter:
           q: "get_SRB_T"
           r: "{RANDOM(3, 6, 1):.3f}"
-      
+
       PT1_T:
         getter:
           q: "get_PT1_T1"
@@ -176,7 +176,7 @@ devices:
         specs:
           valid: ['0', '10', '20', '30', '40', '50', '60', '70']
           type: str
-        
+
       DEMANDABLE_MAG_STATE:
         default: '0'
         setter:
@@ -282,7 +282,7 @@ devices:
           r: "PUBLISHED"
         specs:
           type: str
-          
+
 
 resources:
   TCPIP0::127.0.0.1::33578::SOCKET:

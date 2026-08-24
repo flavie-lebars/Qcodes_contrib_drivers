@@ -137,15 +137,15 @@ class DECS(VisaInstrument):
         name (str): instrument name e.g. 'Proteox'
         decs_visa_path (str): supply the file path from your working directory to the decs_visa.py file
         """
-        
+
         running_on = platform.platform()
         if running_on.startswith("Windows"):
-            print(f"Running on {running_on} - start subprocess without PIPEd output") 
+            print(f"Running on {running_on} - start subprocess without PIPEd output")
             subprocess.Popen(["python", decs_visa_path]) # comment out to use simulated instrument in /qcodes/instrument/sims/ directory
         else:
             print(f"Running on {running_on} - start subprocess with PIPEd output")
             subprocess.Popen(["python3", decs_visa_path], stdout=subprocess.PIPE) # comment out to use simulated instrument in /qcodes/instrument/sims/ directory
-        
+
         time.sleep(1)
 
         #super().__init__(name, 'TCPIP0::127.0.0.1::33578::SOCKET', terminator="\n", **kwargs) # for using simulated instrument in /qcodes/instrument/sims/ directory
